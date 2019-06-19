@@ -10,9 +10,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2019_06_19_145657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "general_users", force: :cascade do |t|
+    t.string "email"
+    t.bigint "provider_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "password_digest"
+    t.string "username"
+    t.index ["provider_id"], name: "index_general_users_on_provider_id"
+  end
+
+  create_table "ldap_users", force: :cascade do |t|
+    t.bigint "general_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "username", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.index ["general_user_id"], name: "index_ldap_users_on_general_user_id"
+    t.index ["reset_password_token"], name: "index_ldap_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_ldap_users_on_username", unique: true
+  end
+
+  create_table "providers", force: :cascade do |t|
+    t.string "name"
+    t.integer "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "general_users", "providers"
+  add_foreign_key "ldap_users", "general_users"
 end
