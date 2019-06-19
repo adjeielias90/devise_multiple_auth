@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @general_user.email %>
+</p>
+
+<p>
+  <strong>Provider:</strong>
+  <%= @general_user.provider %>
+</p>
+
+<%= link_to 'Edit', edit_general_user_path(@general_user) %> |
+<%= link_to 'Back', general_users_path %>
