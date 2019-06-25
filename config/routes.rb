@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :radius_users
   root 'dashboard#index'
 
   devise_for :ldap_users, controllers: {

@@ -20,7 +20,9 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'devise'
 gem 'devise_ldap_authenticatable'
-
+gem "devise-radius-authenticatable", :git => "git://github.com/adjeielias90/devise-radius-authenticatable.git"
+# gem "devise-radius-authenticable", :git => "git://github.com/adjeielias90/devise-raduis"
+# gem 'devise-radius-authenticatable'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'

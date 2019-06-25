@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_19_145657) do
+ActiveRecord::Schema.define(version: 2019_06_25_144225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,20 @@ ActiveRecord::Schema.define(version: 2019_06_19_145657) do
     t.integer "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "radius_users", force: :cascade do |t|
+    t.string "username", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "general_user_id"
+    t.index ["general_user_id"], name: "index_radius_users_on_general_user_id", unique: true
+    t.index ["reset_password_token"], name: "index_radius_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_radius_users_on_username", unique: true
   end
 
   add_foreign_key "general_users", "providers"
