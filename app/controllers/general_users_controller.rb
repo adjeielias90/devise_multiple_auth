@@ -28,6 +28,7 @@ class GeneralUsersController < ApplicationController
 
     respond_to do |format|
       if @general_user.save && @general_user.provider.code == 100
+
         @ldap_login = @general_user.ldap_users.new(ldap_user_params)
         if @ldap_login.save
           format.html { redirect_to new_ldap_user_session_path(:general_user_id => @general_user.id) }
@@ -35,6 +36,24 @@ class GeneralUsersController < ApplicationController
         else
           format.html { redirect_to new_general_user_path }
         end
+
+      else
+
+        if @general_user.save && @general_user.provider.code == 200
+          @ldap_login = @general_user.radius_users.new(ldap_user_params)
+          if @ldap_login.save
+            format.html { redirect_to new_radius_user_session_path(:general_user_id => @general_user.id) }
+            format.json { render :show, status: :created, location: @general_user }
+          else
+            format.html { redirect_to new_general_user_path }
+          end
+        end
+
+      else
+
+        if @general_user.save && @general_user.provider.code == 300
+        end
+
       else
         format.html { render :new }
         format.json { render json: @general_user.errors, status: :unprocessable_entity }
@@ -78,6 +97,10 @@ class GeneralUsersController < ApplicationController
     end
 
     def ldap_user_params
+      params.require(:general_user).permit(:username, :password, :general_user_id)
+    end
+
+    def radius_user_params
       params.require(:general_user).permit(:username, :password, :general_user_id)
     end
 end
