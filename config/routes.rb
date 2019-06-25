@@ -1,15 +1,27 @@
 Rails.application.routes.draw do
-  devise_for :radius_users
   root 'dashboard#index'
 
   devise_for :ldap_users, controllers: {
     sessions: 'ldap_users/sessions'
   }
+
+
+  devise_for :radius_users, controllers: {
+    sessions: 'radius_users/sessions'
+  }
+
   devise_scope :ldap_user do
     root to: 'ldap_users/sessions#new'
     get 'sign_in', to: 'ldap_users/sessions#new'
     get '/ldap_users/sign_out', to: 'ldap_users/sessions#destroy'
   end
+
+  devise_scope :radius_user do
+    root to: 'radius_users/sessions#new'
+    get 'sign_in', to: 'radius_users/sessions#new'
+    get '/radius_users/sign_out', to: 'radius_users/sessions#destroy'
+  end
+
 
 
 

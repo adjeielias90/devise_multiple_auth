@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
     render :text => exception, :status => 500
   end
 
-
   def after_sign_in_path_for(resource)
     root_path
   end

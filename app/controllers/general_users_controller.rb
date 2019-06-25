@@ -24,6 +24,7 @@ class GeneralUsersController < ApplicationController
   # POST /general_users
   # POST /general_users.json
   def create
+
     @general_user = GeneralUser.new(general_user_params)
 
     respond_to do |format|
@@ -37,28 +38,30 @@ class GeneralUsersController < ApplicationController
           format.html { redirect_to new_general_user_path }
         end
 
-      else
+      elsif @general_user.save && @general_user.provider.code == 200
 
-        if @general_user.save && @general_user.provider.code == 200
-          @ldap_login = @general_user.radius_users.new(ldap_user_params)
-          if @ldap_login.save
-            format.html { redirect_to new_radius_user_session_path(:general_user_id => @general_user.id) }
-            format.json { render :show, status: :created, location: @general_user }
-          else
-            format.html { redirect_to new_general_user_path }
-          end
+        @radius_login = @general_user.radius_users.new(radius_user_params)
+        if @radius_login.save
+          format.html { redirect_to new_radius_user_session_path(:general_user_id => @general_user.id) }
+          format.json { render :show, status: :created, location: @general_user }
+        else
+          format.html { redirect_to new_general_user_path }
         end
 
-      else
-
-        if @general_user.save && @general_user.provider.code == 300
-        end
-
+      elsif @general_user.save && @general_user.provider.code == 300
+        # Local users code here.
       else
         format.html { render :new }
         format.json { render json: @general_user.errors, status: :unprocessable_entity }
       end
+
+
+
+
     end
+
+
+
   end
 
   # PATCH/PUT /general_users/1
@@ -101,6 +104,6 @@ class GeneralUsersController < ApplicationController
     end
 
     def radius_user_params
-      params.require(:general_user).permit(:username, :password, :general_user_id)
+      params.require(:general_user).permit(:username, :encrypted_password, :general_user_id)
     end
 end
